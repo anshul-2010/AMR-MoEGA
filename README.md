@@ -11,7 +11,6 @@ This repository implements a complete, end-to-end computational pipeline for pre
 Repository Structure
 ```bash
 AMR-MoEGA/
-.
 │── data/
 │  │── Giessen_dataset/
 │  │   │── cip_ctx_ctz_gen_multi_data.csv
