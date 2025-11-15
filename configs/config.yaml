@@ -1,0 +1,205 @@
+# AMR Evolution Prediction Pipeline
+project:
+  name: "AMR-Evolution-Prediction"
+  description: "End-to-end pipeline integrating bioinformatics, ML, and MoE-GA evolution modeling for AMR prediction."
+
+paths:
+  data_dir: "data"
+  raw: "data/raw"
+  intermediate: "data/intermediate"
+  processed: "data/processed"
+  genomes: "data/raw/genomes"
+  metadata: "data/raw/metadata"
+  labels: "data/raw/AMR_labels"
+  trimmed_reads: "data/intermediate/trimmed_reads"
+  aligned_reads: "data/intermediate/aligned_reads"
+  variants: "data/intermediate/variants"
+  annotated_variants: "data/intermediate/annotated_variants"
+  features: "data/processed/features"
+  pca_embeddings: "data/processed/PCA_embeddings"
+  train_test_split: "data/processed/train_test_split"
+
+# Download Settings
+download:
+  microbigg:
+    enabled: true
+    species_list: ["Escherichia coli"]
+    max_genomes: 1000
+    retry_attempts: 3
+    timeout_sec: 30
+
+# Bioinformatics Pipeline
+bioinformatics:
+  threads: 8
+  memory_gb: 32
+
+  tools:
+    fastp: "fastp"
+    bwa: "bwa"
+    samtools: "samtools"
+    bcftools: "bcftools"
+    gatk: "gatk"
+    snpeff: "snpEff"
+    snpeff_db: "bacteria_db"   # user must install via SnpEff prior to this step
+
+  trimming:
+    min_length: 50
+    quality_cutoff: 20
+    detect_adapters: true
+
+  alignment:
+    reference_genome: "data/raw/reference/reference.fasta"
+    bwa_index_prefix: "data/raw/reference/bwa_index/ref"
+    sort_bam: true
+    mark_duplicates: true
+
+  variant_calling:
+    caller: "bcftools"
+    min_dp: 10
+    min_qual: 30
+    ploidy: 1
+    bcftools:
+      mpileup_opts: "-a AD,DP,ADF,ADR --threads 8"
+      call_opts: "-mv --ploidy 1"
+    gatk:
+      haplotypecaller_opts: "--sample-ploidy 1"
+
+  refinement:
+    min_af: 0.75
+    remove_indels: true
+    min_variant_quality: 20
+
+  annotation:
+    snpeff_genome: "Ecoli_O157_H7"
+    include_intergenic: true
+    filter_effects:
+      - "HIGH"
+      - "MODERATE"
+
+# Feature Engineering
+feature_engineering:
+  snp_matrix:
+    encoding: "binary"
+    min_maf: 0.01
+    max_missing_rate: 0.2
+    include_indels: false
+
+  gene_presence:
+    run_prokka: false
+    min_gene_length: 100
+    feature_type: "presence_absence"
+
+  functional_features:
+    include_pathways: true
+    include_mutation_types: true
+    include_effect_impacts: true
+
+  pca:
+    enabled: true
+    n_components: 50
+    whiten: true
+    svd_solver: "auto"
+
+# Modeling
+modeling:
+  train_test_split:
+    test_size: 0.2
+    stratify: true
+    random_state: 42
+
+  baseline_models:
+    random_forest:
+      n_estimators: 500
+      max_depth: null
+      min_samples_split: 2
+      class_weight: "balanced"
+
+    xgboost:
+      n_estimators: 600
+      learning_rate: 0.05
+      max_depth: 6
+      subsample: 0.7
+
+    lightgbm:
+      n_estimators: 600
+      learning_rate: 0.05
+      num_leaves: 31
+      feature_fraction: 0.8
+  
+  mixture_of_experts:
+    expert_types: ["RF", "GBM", "XGB"]
+    gating_network:
+      type: "MLP"
+      hidden_layers: [64, 32]
+      dropout: 0.2
+    training:
+      epochs: 100
+      batch_size: 32
+      learning_rate: 0.001
+
+# Genetic Algorithm Setting
+genetic_algorithm:
+  population_size: 50
+  num_generations: 100
+  mutation_rate: 0.05
+  crossover_rate: 0.9
+  elitism: 0.1
+  selection_method: "tournament"
+  tournament_size: 5
+  random_seed: 42
+
+# MoE-GA Setting
+moe_ga:
+  experts:
+    count: 3
+    types: ["RandomForest", "LightGBM", "XGBoost"]
+
+  gating_network:
+    hidden_dim: [64, 32]
+    dropout_rate: 0.2
+    learning_rate: 0.001
+    batch_size: 32
+    regularization: 0.01
+
+  evolution:
+    fitness_metric: "AUC"
+    stability_penalty: 0.1
+    novelty_weight: 0.2
+    mutation_sigma: 0.1
+
+# Post Analysis
+post_analysis:
+  compute_pca: true
+  compute_feature_importance: true
+  plot_fitness_trajectories: true
+  generate_evolution_summary: true
+
+# Logging
+logging:
+  level: "INFO"
+  logfile: "experiments/logs/pipeline.log"
+  timestamp_format: "%Y-%m-%d %H:%M:%S"
+
+# Evaluation Setting
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1"
+    - "mcc"
+    - "auc"
+  cross_validation:
+    folds: 5
+
+  statistical_tests:
+    perform_wilcoxon: true
+    perform_ks_test: false
+
+# Runtime Options
+runtime:
+  dry_run: false
+  save_intermediates: true
+  fail_fast: true
+  random_seed: 42
+  max_retries: 3

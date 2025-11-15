@@ -1,0 +1,79 @@
+# Central configuration for the bioinformatics pipeline.
+
+data:
+  raw_fastq_dir: data/raw/fastq        # input: paired fastq files; expected *_R1.fastq.gz and *_R2.fastq.gz
+  trimmed_fastq_dir: data/intermediate/trimmed_reads
+  bam_dir: data/intermediate/aligned_reads
+  vcf_dir: data/intermediate/variants
+  filtered_vcf_dir: data/intermediate/variants_filtered
+  annotated_vcf_dir: data/intermediate/annotated_variants
+  snp_matrix_csv: data/processed/features/snp_matrix.csv
+
+reference:
+  fasta: data/raw/reference.fa         # path to reference fasta (must be indexed for bwa/samtools)
+  bwa_index_prefix: ""                 # optional: if bwa index files are precomputed, provide prefix here
+  snpeff_db: "Escherichia_coli_K12"    # SnpEff database name for annotation
+
+bioinformatics:
+  threads: 8
+  memory_gb: 32
+
+  # Tool Paths
+  tools:
+    fastp: "fastp"
+    bwa: "bwa"
+    samtools: "samtools"
+    bcftools: "bcftools"
+    gatk: "gatk"
+    snpeff: "snpEff"
+    snpeff_db: "bacteria_db"
+
+  # Trimming (fastp)
+  trimming:
+    enabled: true
+    min_length: 50
+    quality_cutoff: 20
+    detect_adapters: true
+    html_report: "data/intermediate/trimmed_reads/fastp_report.html"
+    json_report: "data/intermediate/trimmed_reads/fastp_report.json"
+
+  # Alignment (BWA + Samtools)
+  alignment:
+    enabled: true
+    reference_genome: "data/raw/reference/reference.fasta"
+    bwa_index_prefix: "data/raw/reference/bwa_index/ref"
+    mark_duplicates: true
+    sort_bam: true
+    generate_stats: true
+
+  # Variant Calling
+  variant_calling:
+    enabled: true
+    caller: "bcftools"       # "bcftools" or "gatk"
+    min_dp: 10
+    min_qual: 30
+    ploidy: 1
+
+    bcftools:
+      mpileup_opts: "-a AD,DP,ADF,ADR --threads 8"
+      call_opts: "-mv --ploidy 1"
+
+    gatk:
+      haplotypecaller_opts: "--sample-ploidy 1 -stand-call-conf 30"
+
+  # Variant Refinement
+  refinement:
+    enabled: true
+    min_af: 0.75
+    min_variant_quality: 20
+    remove_indels: true
+    remove_low_depth: true
+
+  # SnpEff Annotation
+  annotation:
+    enabled: true
+    snpeff_genome: "Ecoli_O157_H7"
+    include_intergenic: true
+    filter_effects:
+      - "HIGH"
+      - "MODERATE"
