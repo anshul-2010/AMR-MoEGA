@@ -790,7 +790,7 @@ Contributions are welcome! Please:
 
 ---
 
-## 🔗 Related Resources
+## Related Resources
 
 - [Bioinformatics Best Practices](https://bioinformatics.ca/)
 - [scikit-learn Documentation](https://scikit-learn.org/)
@@ -803,3 +803,7 @@ For questions or collaborations:
 - Anshul Bagaria
 - Dual Degree Student / Researcher – IIT Madras
 - Email: be21b005@smail.iitm.ac.in
+
+## Note on Automation Status
+- The core logic and individual components within the pipeline files (*.py, etc.) are functionally correct and have been verified. However, the fully automated, end-to-end streaming process (e.g., scheduled runs, continuous data flow between stages) is still under active development.
+- If you encounter issues with automated runs, please try executing the pipeline steps manually and sequentially. The full automation layer will be completed soon.
