@@ -12,33 +12,33 @@ Repository Structure
 ```bash
 AMR-MoEGA/
 .
-|── data/
+│── data/
 │  │── Giessen_dataset/
 │  │   │── cip_ctx_ctz_gen_multi_data.csv
 │  │   └── cip_ctx_ctz_gen_pheno.csv
 │  │── raw/
 │  │── intermediate/
 │  └── processed/
-|── bioinformatics_pipeline/
-│   ├── a_download/
-│   ├── b_preprocessing/         # Pre-processing pipeline
-│   ├── c_variants/              # Variant calling pipeline
-│   ├── bioinfo.py               # bioinformatics pipeline script
+│── bioinformatics_pipeline/
+│   │── a_download/
+│   │── b_preprocessing/         # Pre-processing pipeline
+│   │── c_variants/              # Variant calling pipeline
+│   │── bioinfo.py               # bioinformatics pipeline script
 │   └── cli.py                   # CLI script
-|── ml_pipeline/
-│   ├── d_feature_engineering/   # feature engineering with PCA
-│   ├── e_modeling/              # Baseline and MoE models
-│   ├── feature_engineering.py   # feature engineering script
-│   └── modeling.py              # modeling script
-|── moega_pipeline/
-│   ├── search_space.py/         # modeling param optimization
-│   ├── chromosome.py/           # genetic offsprings
-│   ├── experts.py               # MoE model inference time
-│   ├── fitness.py               # MoE fitness function in GA
-│   ├── hgt_crossover.py         # crossover HGT modeling
+│── ml_pipeline/
+│   │── d_feature_engineering/   # feature engineering with PCA
+│   │── e_modeling/              # Baseline and MoE models
+│   │── feature_engineering.py   # feature engineering script
+│   │── modeling.py              # modeling script
+│── moega_pipeline/
+│   │── search_space.py/         # modeling param optimization
+│   │── chromosome.py/           # genetic offsprings
+│   │── experts.py               # MoE model inference time
+│   │── fitness.py               # MoE fitness function in GA
+│   │── hgt_crossover.py         # crossover HGT modeling
 │   └── trainer.py               # training code
-├── config/
-│   ├── config.yaml              # Global runtime config
+│── config/
+│   │── config.yaml              # Global runtime config
 │   └── bioinfo_config.yaml      # Reference genomes, SnpEff DB, tools
 └── README.md
 ```
