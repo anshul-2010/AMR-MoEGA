@@ -765,16 +765,6 @@ python -c "import yaml; yaml.safe_load(open('configs/config.yaml'))"
 
 ---
 
-## Documentation
-
-- **Bioinformatics Details**: See `docs/bioinfo_pipeline.md`
-- **Methodology**: See `docs/methodology.md`
-- **Results Interpretation**: See `docs/results_summary.md`
-- **Code Examples**: See `docs/examples/`
-
-
----
-
 ## License
 
 This project is licensed under the MIT License - see `LICENSE` file for details.
@@ -810,6 +800,6 @@ Contributions are welcome! Please:
 
 ## Contact
 For questions or collaborations:
-Anshul Bagaria
-Dual Degree Student / Researcher – IIT Madras
-Email: be21b005@smail.iitm.ac.in
+- Anshul Bagaria
+- Dual Degree Student / Researcher – IIT Madras
+- Email: be21b005@smail.iitm.ac.in
