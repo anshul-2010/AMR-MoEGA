@@ -1,0 +1,8 @@
+numpy
+pandas
+scikit-learn
+joblib
+matplotlib
+pyyaml
+cyvcf2    # optional for VCF parsing
+scipy
