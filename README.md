@@ -9,40 +9,39 @@ This repository implements a complete, end-to-end computational pipeline for pre
 - Unified CLI for reproducible execution
 
 Repository Structure
-
-.
-├── src
-│   ├── components
-│   │   ├── Button.js
-│   │   └── Card.js
-│   ├── pages
-│   │   ├── HomePage.js
-│   │   └── AboutPage.js
-│   └── App.js
-├── public
-│   ├── index.html
-│   └── assets
-│       └── logo.png
-├── .gitignore
-├── package.json
-└── README.md
-
+```bash
 AMR-MoEGA/
-||
-||── pipeline/
-|│   ├── bioinfo/                 # All bioinformatics modules
-|│   ├── features/                # Feature engineering
-|│   ├── moega/                   # GA + MoE modeling engine
-|│   ├── utils/                   # Common pipeline utilities
-|│   └── cli.py                   # Top-level CLI
-|│
-|├── config/
-|│   ├── config.yaml              # Global runtime config
-|│   └── bioinfo_config.yaml      # Reference genomes, SnpEff DB, tools
-|│
-|├── notebooks/                   # Analysis & visualization
-|├── data/                        # raw → intermediate → processed
-|└── README.md
+.
+|── data/
+|   |── Giessen_dataset/
+|   |   |── cip_ctx_ctz_gen_multi_data.csv
+|   |   └── cip_ctx_ctz_gen_pheno.csv
+|   |── raw/
+|   |── intermediate/
+|   └── processed/
+|── bioinformatics_pipeline/
+│   ├── a_download/
+│   ├── b_preprocessing/         # Pre-processing pipeline
+│   ├── c_variants/              # Variant calling pipeline
+│   ├── bioinfo.py               # bioinformatics pipeline script
+│   └── cli.py                   # CLI script
+|── ml_pipeline/
+│   ├── d_feature_engineering/   # feature engineering with PCA
+│   ├── e_modeling/              # Baseline and MoE models
+│   ├── feature_engineering.py   # feature engineering script
+│   └── modeling.py              # modeling script
+|── moega_pipeline/
+│   ├── search_space.py/         # modeling param optimization
+│   ├── chromosome.py/           # genetic offsprings
+│   ├── experts.py               # MoE model inference time
+│   ├── fitness.py               # MoE fitness function in GA
+│   ├── hgt_crossover.py         # crossover HGT modeling
+│   └── trainer.py               # training code
+├── config/
+│   ├── config.yaml              # Global runtime config
+│   └── bioinfo_config.yaml      # Reference genomes, SnpEff DB, tools
+└── README.md
+```
 
 Installation
 1. Clone
@@ -50,18 +49,6 @@ Installation
 git clone https://github.com/anshul-2010/AMR-Evolution-Prediction.git
 cd AMR-Evolution-Prediction
 ```
-
-2. Create Conda Environment
-```python
-conda env create -f environment.yml
-conda activate amr-evo
-```
-
-3. Install Repo
-pip install -e .
-
-⚙️ Configuration Files
-config/config.yaml
 
 Controls the overall pipeline:
 
