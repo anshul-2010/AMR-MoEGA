@@ -13,12 +13,12 @@ Repository Structure
 AMR-MoEGA/
 .
 |── data/
-|   |── Giessen_dataset/
-|   |   |── cip_ctx_ctz_gen_multi_data.csv
-|   |   └── cip_ctx_ctz_gen_pheno.csv
-|   |── raw/
-|   |── intermediate/
-|   └── processed/
+│  │── Giessen_dataset/
+│  │   │── cip_ctx_ctz_gen_multi_data.csv
+│  │   └── cip_ctx_ctz_gen_pheno.csv
+│  │── raw/
+│  │── intermediate/
+│  └── processed/
 |── bioinformatics_pipeline/
 │   ├── a_download/
 │   ├── b_preprocessing/         # Pre-processing pipeline
